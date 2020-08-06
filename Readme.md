@@ -75,7 +75,7 @@
 
 ### Tips
 
- 	If the `TagDetection_msg` is need at other package. Modify your CmakeList and package.xml to add
+  If the `TagDetection_msg` is need at other package. Modify your CmakeList and package.xml to add
 
 ```
 find_package(catkin REQUIRED COMPONENTS
