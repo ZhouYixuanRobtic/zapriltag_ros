@@ -43,7 +43,7 @@ private:
 
     void watchdog(const ros::TimerEvent &e);
     void ImageCallback(const sensor_msgs::ImageConstPtr& msg);
-    void TagsInfoPublish(const tag_detection_info_t & tags_detected);
+    void TagsInfoPublish(const tag_detection_info_t & tags_detected,const std::string & frame_id);
 public:
     bool image_received{};
     ROSWrapper(std::string tag_family_name,double tag_size,const double* intrinsic_parameter,

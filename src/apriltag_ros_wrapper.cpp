@@ -40,7 +40,7 @@ void ROSWrapper::ImageCallback(const sensor_msgs::ImageConstPtr &msg)
     n_.param<bool>("/zapriltag_ros/colorOn",colorOn_,false);
     if(tagDetectorOn_)
     {
-        TagsInfoPublish(aprilTag->GetTargetPoseMatrix(subscribed_rgb_));
+        TagsInfoPublish(aprilTag->GetTargetPoseMatrix(subscribed_rgb_),msg->header.frame_id);
         if(tagGraphOn_)
         {
             cv::imshow("Tag Detections", subscribed_rgb_);
@@ -59,7 +59,7 @@ void ROSWrapper::ImageCallback(const sensor_msgs::ImageConstPtr &msg)
 
 }
 
-void ROSWrapper::TagsInfoPublish(const tag_detection_info_t& tags_detected)
+void ROSWrapper::TagsInfoPublish(const tag_detection_info_t& tags_detected, const std::string & frame_id)
 {
     zapriltag_ros::TagsDetection_msg TagsDetection;
     zapriltag_ros::TagDetection_msg TagDetection;
@@ -67,7 +67,8 @@ void ROSWrapper::TagsInfoPublish(const tag_detection_info_t& tags_detected)
     {
         //std::cout<<tags_detected_[0].Trans_C2T.matrix()<<std::endl;
 
-        TagsDetection.header.frame_id="camera_color_optical_frame";
+        TagsDetection.header.frame_id=frame_id;
+        TagsDetection.header.stamp = ros::Time::now();
         for(int i=0;i<tags_detected.size();++i)
         {
             TagDetection.id = tags_detected[i].id;
