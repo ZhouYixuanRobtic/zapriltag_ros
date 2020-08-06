@@ -1,0 +1,6 @@
+<launch>
+
+    <rosparam command="load" ns="zapriltag_ros" file="$(find zapriltag_ros)/config/zapriltag.yaml"/>    
+    <node pkg="zapriltag_ros" type="zapriltag_ros" name="zapriltag_ros"  output="screen"/>
+
+</launch>

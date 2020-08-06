@@ -1,0 +1,26 @@
+#tag's physic size unit meter
+  tag_size: 0.1 
+
+#control trigger
+  #camera tag graph interface trigger
+  tagGraphOn: true #default true
+  #detector color mode trigger
+  colorOn: true #default true
+  #detector trigger
+  tagDetectorOn: true #default true
+  
+#intrinsic parameter
+  fx: 615.3072
+  fy: 616.1456
+  u0: 333.4404
+  v0: 236.2650
+
+#detector parameter
+  quad_decimate: 2.0 #Decimate input image by this factor
+  quad_sigma: 0.0 #Apply low-pass blur to input; negative sharpens
+  nthreads: 2.0 #Use this many CPU threads
+
+  refine_edges: true #Spend more time trying to align edges of tags
+
+#tag family name
+  tag_family_name: "tag36h11"
