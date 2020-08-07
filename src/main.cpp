@@ -18,7 +18,6 @@ int main(int argc, char* argv[])
     nh_.param<float>("quad_sigma",detector_parameter[1],0.0);
     nh_.param<float>("nthreads",detector_parameter[2],2.0);
     nh_.param<bool>("refine_edges",refine_edges,true);
-
     ROSWrapper real_sense(tag_family_name,tag_size,intrinsic_parameter,detector_parameter,refine_edges);
     ros::Rate loop_rate(30);
     while(ros::ok())

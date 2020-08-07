@@ -8,6 +8,8 @@
   colorOn: true #default true
   #detector trigger
   tagDetectorOn: true #default true
+  #tf publish trigger
+  publish_tf: true
   
 #intrinsic parameter
   fx: 615.3072

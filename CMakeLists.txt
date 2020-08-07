@@ -22,6 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   tf2_eigen
+  tf
   tf2_geometry_msgs
   tf2_ros message_generation
 )
@@ -50,6 +51,7 @@ catkin_package(
                  image_transport
                  roscpp
                  geometry_msgs
+                 tf
                  tf2_ros tf2_eigen tf2_geometry_msgs
                  message_runtime
         DEPENDS

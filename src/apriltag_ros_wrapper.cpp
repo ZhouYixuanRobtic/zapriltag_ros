@@ -5,12 +5,12 @@
 #include "zapriltag_ros/apriltag_ros_wrapper.h"
 
 #include <utility>
-ROSWrapper::ROSWrapper(std::string tag_family_name,double tag_size,const double* intrinsic_parameter,const float* detector_parameter,bool refine_edges)
+ROSWrapper::ROSWrapper(std::string tag_family_name,double tag_size,const double* intrinsic_parameter,
+                       const float* detector_parameter,bool refine_edges)
 {
     aprilTag = new AprilTag(std::move(tag_family_name),tag_size,intrinsic_parameter,detector_parameter,refine_edges);
     this->image_received= false;
     it_ = new image_transport::ImageTransport(n_);
-
     tag_pub_ = n_.advertise<zapriltag_ros::TagsDetection_msg>("TagsDetected",100);
     image_sub_ = it_->subscribe("/camera/color/image_raw", 100,&ROSWrapper::ImageCallback,this);
     //camera_info_sub_ = n_->subscribe("/camera/camera_info",100,&ROSWrapper::InfoCallback,this);
@@ -38,9 +38,13 @@ void ROSWrapper::ImageCallback(const sensor_msgs::ImageConstPtr &msg)
     n_.param<bool>("/zapriltag_ros/tagDetectorOn",tagDetectorOn_,false);
     n_.param<bool>("/zapriltag_ros/tagGraphOn",tagGraphOn_,false);
     n_.param<bool>("/zapriltag_ros/colorOn",colorOn_,false);
+    n_.param<bool>("/zapriltag_ros/publish_tf",publish_tf_,false);
     if(tagDetectorOn_)
     {
-        TagsInfoPublish(aprilTag->GetTargetPoseMatrix(subscribed_rgb_),msg->header.frame_id);
+        tag_detection_info_t tags_detected = aprilTag->GetTargetPoseMatrix(subscribed_rgb_);
+        TagsInfoPublish(tags_detected,msg->header.frame_id);
+        if(publish_tf_)
+            TFPublish(tags_detected,msg->header.frame_id);
         if(tagGraphOn_)
         {
             cv::imshow("Tag Detections", subscribed_rgb_);
@@ -65,8 +69,6 @@ void ROSWrapper::TagsInfoPublish(const tag_detection_info_t& tags_detected, cons
     zapriltag_ros::TagDetection_msg TagDetection;
     if(!tags_detected.empty())
     {
-        //std::cout<<tags_detected_[0].Trans_C2T.matrix()<<std::endl;
-
         TagsDetection.header.frame_id=frame_id;
         TagsDetection.header.stamp = ros::Time::now();
         for(int i=0;i<tags_detected.size();++i)
@@ -80,6 +82,21 @@ void ROSWrapper::TagsInfoPublish(const tag_detection_info_t& tags_detected, cons
         }
     }
     tag_pub_.publish(TagsDetection);
+}
+void ROSWrapper::TFPublish(const tag_detection_info_t &tags_detected, const std::string &frame_id)
+{
+    if(!tags_detected.empty())
+    {
+        for(const auto & tag_detected : tags_detected)
+        {
+            geometry_msgs::TransformStamped tf_trans;
+            tf_trans.header.stamp = ros::Time::now();
+            tf_trans.header.frame_id = frame_id;
+            tf_trans.child_frame_id = "tag"+std::to_string(tag_detected.id);
+            tf_trans.transform = tf2::eigenToTransform(tag_detected.Trans_C2T).transform;
+            broad_caster.sendTransform(tf_trans);
+        }
+    }
 }
 void ROSWrapper::watchdog(const ros::TimerEvent &e)
 {
