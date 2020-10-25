@@ -1,12 +1,12 @@
 ## zapriltag_ros
 
-​	This package provides the zapriltag_ros node which detect april tag and provide the 6 DOF pose estimation. The detection can be stopped at any time.
+​	This package provides the zapriltag_ros node, which detects april tag and provide the 6-DOF pose estimation. The detection can be stopped at any time.
 
 ![result](./config/result.png)
 
 ### Compile & Dependency&Usage
 
-​	This package depend on [apriltag](https://github.com/AprilRobotics/apriltag), OpenCV.  After apriltag and OpenCV were installed, clone this repositery and compile it by catkin_make.
+​	This package depends on [apriltag](https://github.com/AprilRobotics/apriltag), OpenCV.  After apriltag and OpenCV were installed, clone this repositery and compile it by catkin_make.
 
 -  install apriltag by cmake
 
@@ -25,13 +25,13 @@
   roslaunch zapriltag_ros zapriltag_ros.launch
   ```
 
-### Subscribe Topics
+### Subscribed Topics
 
-​	Currently, this package only subscribe 
+​	Currently, this package only subscribes 
 
 ​	`/camera/color/image_raw (sensor_msgs/Image)`
 
-### Publish Topics
+### Published Topics
 
 - Custom message
 
@@ -87,7 +87,7 @@
 
 ### Tips
 
-  If the `TagDetection_msg` is need at other package. Modify your CmakeList and package.xml to add
+  If the `TagDetection_msg` is needed at other packages. Modify your CmakeList and package.xml to add
 
 ```
 find_package(catkin REQUIRED COMPONENTS
